@@ -46,8 +46,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.slf4j.Logger;
+
 import tuwien.auto.calimero.exception.KNXException;
-import tuwien.auto.calimero.log.LogService;
 
 /**
  * Adapter to access a serial communication port using the rxtx library.
@@ -73,12 +74,12 @@ public class RxtxAdapter extends LibraryAdapter
 	 * and baud rate.
 	 * <p>
 	 *
-	 * @param logger the log service to use for this adapter
+	 * @param logger the logger to use for this adapter
 	 * @param portId port identifier of the serial communication port to use
 	 * @param baudrate baud rate to use for communication, 0 &lt; baud rate
 	 * @throws KNXException
 	 */
-	public RxtxAdapter(final LogService logger, final String portId, final int baudrate)
+	public RxtxAdapter(final Logger logger, final String portId, final int baudrate)
 		throws KNXException
 	{
 		super(logger);
