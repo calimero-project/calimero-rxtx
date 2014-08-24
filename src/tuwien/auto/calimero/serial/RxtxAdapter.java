@@ -1,6 +1,6 @@
 /*
     Calimero 2 - A library for KNX network access
-    Copyright (c) 2006, 2011 B. Malinowsky
+    Copyright (c) 2006, 2014 B. Malinowsky
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -52,13 +52,12 @@ import tuwien.auto.calimero.log.LogService;
 /**
  * Adapter to access a serial communication port using the rxtx library.
  * <p>
- * This file is not included in the Calimero library by default, but an adapter which can
- * be used in case the rxtx library is available on the host platform.<br>
+ * This file is not included in the Calimero library by default, but an adapter which can be used in
+ * case the rxtx library is available on the host platform.<br>
  * The rxtx library itself is not part of the Calimero library.<br>
  * For downloads, license, installation and usage of the rxtx library, as well as further
- * documentation, refer to the homepage of the rxtx library project,
- * http://rxtx.qbang.org.
- * 
+ * documentation, refer to the rxtx library project, https://github.com/rxtx/rxtx.
+ *
  * @author B. Malinowsky
  */
 public class RxtxAdapter extends LibraryAdapter
@@ -73,7 +72,7 @@ public class RxtxAdapter extends LibraryAdapter
 	 * Creates a new rxtx library adapter, and opens a serial port using a port identifier
 	 * and baud rate.
 	 * <p>
-	 * 
+	 *
 	 * @param logger the log service to use for this adapter
 	 * @param portId port identifier of the serial communication port to use
 	 * @param baudrate baud rate to use for communication, 0 &lt; baud rate
@@ -89,8 +88,8 @@ public class RxtxAdapter extends LibraryAdapter
 	public void setBaudRate(final int baudrate)
 	{
 		try {
-			port.setSerialPortParams(baudrate, SerialPort.DATABITS_8,
-				SerialPort.STOPBITS_1, SerialPort.PARITY_EVEN);
+			port.setSerialPortParams(baudrate, SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
+					SerialPort.PARITY_EVEN);
 		}
 		catch (final UnsupportedCommOperationException e) {
 			logger.error("failed to configure port settings");
@@ -139,8 +138,8 @@ public class RxtxAdapter extends LibraryAdapter
 			}
 			setBaudRate(baudrate);
 			logger.info("setup serial port: baudrate " + port.getBaudRate()
-				+ ", parity even, databits " + port.getDataBits() + ", stopbits "
-				+ port.getStopBits() + ", flow control " + port.getFlowControlMode());
+					+ ", parity even, databits " + port.getDataBits() + ", stopbits "
+					+ port.getStopBits() + ", flow control " + port.getFlowControlMode());
 			is = port.getInputStream();
 			os = port.getOutputStream();
 			/*
