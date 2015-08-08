@@ -1,6 +1,6 @@
 /*
     Calimero 2 - A library for KNX network access
-    Copyright (c) 2006, 2014 B. Malinowsky
+    Copyright (c) 2006, 2015 B. Malinowsky
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@ import java.io.OutputStream;
 
 import org.slf4j.Logger;
 
-import tuwien.auto.calimero.exception.KNXException;
+import tuwien.auto.calimero.KNXException;
 
 /**
  * Adapter to access a serial communication port using the rxtx library.
