@@ -51,10 +51,11 @@ import org.slf4j.Logger;
 import tuwien.auto.calimero.KNXException;
 
 /**
- * Adapter to access a serial communication port using the rxtx library.
+ * Adapter to access a serial communication port using the rxtx (or compatible) library.
  * <p>
- * This file is not included in the Calimero library by default, but an adapter which can be used in
- * case the rxtx library is available on the host platform.<br>
+ * This file is not included in the Calimero library by default, but is an optional adapter. It can
+ * be used in case the rxtx library, or any other library for serial communication compatible to it,
+ * is available on the host platform.<br>
  * The rxtx library itself is not part of the Calimero library.<br>
  * For downloads, license, installation and usage of the rxtx library, as well as further
  * documentation, refer to the rxtx library project, https://github.com/rxtx/rxtx.
@@ -72,12 +73,11 @@ public class RxtxAdapter extends LibraryAdapter
 	/**
 	 * Creates a new rxtx library adapter, and opens a serial port using a port identifier
 	 * and baud rate.
-	 * <p>
 	 *
 	 * @param logger the logger to use for this adapter
 	 * @param portId port identifier of the serial communication port to use
 	 * @param baudrate baud rate to use for communication, 0 &lt; baud rate
-	 * @throws KNXException
+	 * @throws KNXException on error opening/configuring the rxtx serial port
 	 */
 	public RxtxAdapter(final Logger logger, final String portId, final int baudrate)
 		throws KNXException
@@ -86,6 +86,7 @@ public class RxtxAdapter extends LibraryAdapter
 		open(portId, baudrate);
 	}
 
+	@Override
 	public void setBaudRate(final int baudrate)
 	{
 		try {
@@ -97,21 +98,25 @@ public class RxtxAdapter extends LibraryAdapter
 		}
 	}
 
+	@Override
 	public int getBaudRate()
 	{
 		return port.getBaudRate();
 	}
 
+	@Override
 	public InputStream getInputStream()
 	{
 		return is;
 	}
 
+	@Override
 	public OutputStream getOutputStream()
 	{
 		return os;
 	}
 
+	@Override
 	public void close()
 	{
 		port.close();
@@ -138,9 +143,9 @@ public class RxtxAdapter extends LibraryAdapter
 				logger.warn("no timeout support: serial port might hang during close");
 			}
 			setBaudRate(baudrate);
-			logger.info("setup serial port: baudrate " + port.getBaudRate()
-					+ ", parity even, databits " + port.getDataBits() + ", stopbits "
-					+ port.getStopBits() + ", flow control " + port.getFlowControlMode());
+			logger.info("setup serial port: baudrate " + port.getBaudRate() + ", even parity, "
+					+ port.getDataBits() + " databits, " + port.getStopBits() + " stopbits, "
+					+ "flow control " + port.getFlowControlMode());
 			is = port.getInputStream();
 			os = port.getOutputStream();
 			/*
@@ -183,29 +188,19 @@ public class RxtxAdapter extends LibraryAdapter
 				});
 			} catch (TooManyListenersException e) {	}
 			*/
-			return;
 		}
 		// we can't let those exceptions bubble up, so log cause and throw our own
-		catch (final NoSuchPortException e) {
-			logger.error("serial port " + portId + " not found");
+		catch (final NoSuchPortException | PortInUseException | IOException
+				| UnsupportedCommOperationException e) {
+			port.close();
+			try {
+				if (is != null)
+					is.close();
+				if (os != null)
+					os.close();
+			}
+			catch (final Exception ignore) {}
+			throw new KNXException("failed to open serial port " + portId, e);
 		}
-		catch (final PortInUseException e) {
-			logger.error("serial port " + portId + " in use, " + e.getMessage());
-		}
-		catch (final IOException e) {
-			logger.error("failed to open port streams, " + e.getMessage());
-		}
-		catch (final UnsupportedCommOperationException e) {
-			logger.error("failed to configure port settings");
-		}
-		port.close();
-		try {
-			if (is != null)
-				is.close();
-			if (os != null)
-				os.close();
-		}
-		catch (final Exception ignore) {}
-		throw new KNXException("failed to open serial port " + portId);
 	}
 }
