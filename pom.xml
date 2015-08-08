@@ -1,9 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.github.calimero</groupId>
+	<parent>
+		<groupId>com.github.calimero</groupId>
+		<artifactId>calimero-parent</artifactId>
+		<version>2.3-SNAPSHOT</version>
+	</parent>	
 	<artifactId>calimero-rxtx</artifactId>
-	<version>2.2.1-SNAPSHOT</version>
 	<name>Calimero rxtx Adapter</name>
 	<description>Adapter to use the rxtx library for serial communication</description>
 	<scm>
@@ -25,17 +28,6 @@
 	</developers>
 
 	<build>
-		<sourceDirectory>src</sourceDirectory>
-		<testSourceDirectory>test</testSourceDirectory>
-		<resources>
-			<resource>
-				<directory>${basedir}</directory>
-				<targetPath>META-INF</targetPath>
-				<includes>
-					<include>LICENSE.txt</include>
-				</includes>
-			</resource>
-		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -51,55 +43,10 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<configuration>
-					<archive>
-						<manifestEntries>
-							<Built-By>calimero-project</Built-By>
-						</manifestEntries>
-					</archive>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9.1</version>
 				<configuration>
-					<overview>src/overview.html</overview>
-					<additionalparam>-Xdoclint:none</additionalparam>
-					<archive>
-						<manifestEntries>
-							<Built-By>calimero-project</Built-By>
-						</manifestEntries>
-					</archive>
+					<additionalparam>-Xdoclint</additionalparam>
 				</configuration>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>2.3</version>
-				<configuration>
-					<archive>
-						<manifestEntries>
-							<Built-By>calimero-project</Built-By>
-						</manifestEntries>
-					</archive>
-				</configuration>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>
@@ -107,7 +54,7 @@
 		<dependency>
 			<groupId>com.github.calimero</groupId>
 			<artifactId>calimero-core</artifactId>
-			<version>2.2.1-SNAPSHOT</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.rxtx</groupId>
@@ -115,14 +62,4 @@
 			<version>2.1.7</version>
 		</dependency>
 	</dependencies>
-	<distributionManagement>
-		<snapshotRepository>
-			<id>sonatype</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository>
-		<repository>
-			<id>sonatype</id>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-		</repository>
-	</distributionManagement>
 </project>
