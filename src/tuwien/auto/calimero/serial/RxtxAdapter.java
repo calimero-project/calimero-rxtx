@@ -1,6 +1,6 @@
 /*
     Calimero 2 - A library for KNX network access
-    Copyright (c) 2006, 2014 B. Malinowsky
+    Copyright (c) 2006, 2015 B. Malinowsky
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -36,24 +36,24 @@
 
 package tuwien.auto.calimero.serial;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import gnu.io.CommPortIdentifier;
 import gnu.io.NoSuchPortException;
 import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
 import gnu.io.UnsupportedCommOperationException;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import tuwien.auto.calimero.exception.KNXException;
 import tuwien.auto.calimero.log.LogService;
 
 /**
- * Adapter to access a serial communication port using the rxtx library.
+ * Adapter to access a serial communication port using the rxtx (or compatible) library.
  * <p>
- * This file is not included in the Calimero library by default, but an adapter which can be used in
- * case the rxtx library is available on the host platform.<br>
+ * This file is not included in the Calimero library by default, but is an optional adapter. It can
+ * be used in case the rxtx library, or any other library for serial communication compatible to it,
+ * is available on the host platform.<br>
  * The rxtx library itself is not part of the Calimero library.<br>
  * For downloads, license, installation and usage of the rxtx library, as well as further
  * documentation, refer to the rxtx library project, https://github.com/rxtx/rxtx.
@@ -69,8 +69,8 @@ public class RxtxAdapter extends LibraryAdapter
 	private OutputStream os;
 
 	/**
-	 * Creates a new rxtx library adapter, and opens a serial port using a port identifier
-	 * and baud rate.
+	 * Creates a new rxtx library adapter, and opens a serial port using a port identifier and baud
+	 * rate.
 	 * <p>
 	 *
 	 * @param logger the log service to use for this adapter
@@ -118,7 +118,7 @@ public class RxtxAdapter extends LibraryAdapter
 
 	private void open(String portId, final int baudrate) throws KNXException
 	{
-		logger.info("using rxtx library for serial port access");
+		logger.info("open rxtx serial port connection for " + portId);
 		try {
 			// rxtx does not recognize the Windows prefix for a resource name
 			if (portId.startsWith("\\\\.\\"))
@@ -126,7 +126,7 @@ public class RxtxAdapter extends LibraryAdapter
 			final CommPortIdentifier id = CommPortIdentifier.getPortIdentifier(portId);
 			if (id.getPortType() != CommPortIdentifier.PORT_SERIAL)
 				throw new KNXException(portId + " is not a serial port ID");
-			port = (SerialPort) id.open("Calimero FT1.2", OPEN_TIMEOUT);
+			port = (SerialPort) id.open("Calimero", OPEN_TIMEOUT);
 			port.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
 			port.enableReceiveThreshold(1024);
 			// required to allow a close of the rxtx port, otherwise a read could lock
@@ -137,9 +137,9 @@ public class RxtxAdapter extends LibraryAdapter
 				logger.warn("no timeout support: serial port might hang during close");
 			}
 			setBaudRate(baudrate);
-			logger.info("setup serial port: baudrate " + port.getBaudRate()
-					+ ", parity even, databits " + port.getDataBits() + ", stopbits "
-					+ port.getStopBits() + ", flow control " + port.getFlowControlMode());
+			logger.info("setup serial port: baudrate " + port.getBaudRate() + ", even parity, "
+					+ port.getDataBits() + " databits, " + port.getStopBits() + " stopbits, "
+					+ "flow control " + port.getFlowControlMode());
 			is = port.getInputStream();
 			os = port.getOutputStream();
 			/*
@@ -197,7 +197,8 @@ public class RxtxAdapter extends LibraryAdapter
 		catch (final UnsupportedCommOperationException e) {
 			logger.error("failed to configure port settings");
 		}
-		port.close();
+		if (port != null)
+			port.close();
 		try {
 			if (is != null)
 				is.close();
