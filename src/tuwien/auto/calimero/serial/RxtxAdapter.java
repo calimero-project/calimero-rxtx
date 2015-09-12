@@ -36,18 +36,17 @@
 
 package tuwien.auto.calimero.serial;
 
-import gnu.io.CommPortIdentifier;
-import gnu.io.NoSuchPortException;
-import gnu.io.PortInUseException;
-import gnu.io.SerialPort;
-import gnu.io.UnsupportedCommOperationException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.slf4j.Logger;
 
+import gnu.io.CommPortIdentifier;
+import gnu.io.NoSuchPortException;
+import gnu.io.PortInUseException;
+import gnu.io.SerialPort;
+import gnu.io.UnsupportedCommOperationException;
 import tuwien.auto.calimero.KNXException;
 
 /**
@@ -124,7 +123,7 @@ public class RxtxAdapter extends LibraryAdapter
 
 	private void open(String portId, final int baudrate) throws KNXException
 	{
-		logger.info("using rxtx library for serial port access");
+		logger.info("open rxtx serial port connection for {}", portId);
 		try {
 			// rxtx does not recognize the Windows prefix for a resource name
 			if (portId.startsWith("\\\\.\\"))
@@ -132,7 +131,7 @@ public class RxtxAdapter extends LibraryAdapter
 			final CommPortIdentifier id = CommPortIdentifier.getPortIdentifier(portId);
 			if (id.getPortType() != CommPortIdentifier.PORT_SERIAL)
 				throw new KNXException(portId + " is not a serial port ID");
-			port = (SerialPort) id.open("Calimero FT1.2", OPEN_TIMEOUT);
+			port = (SerialPort) id.open("Calimero", OPEN_TIMEOUT);
 			port.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
 			port.enableReceiveThreshold(1024);
 			// required to allow a close of the rxtx port, otherwise a read could lock
@@ -192,7 +191,8 @@ public class RxtxAdapter extends LibraryAdapter
 		// we can't let those exceptions bubble up, so log cause and throw our own
 		catch (final NoSuchPortException | PortInUseException | IOException
 				| UnsupportedCommOperationException e) {
-			port.close();
+			if (port != null)
+				port.close();
 			try {
 				if (is != null)
 					is.close();
