@@ -1,6 +1,6 @@
 /*
     Calimero 2 - A library for KNX network access
-    Copyright (c) 2006, 2015 B. Malinowsky
+    Copyright (c) 2006, 2016 B. Malinowsky
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -43,6 +43,7 @@ import java.io.OutputStream;
 import gnu.io.CommPortIdentifier;
 import gnu.io.NoSuchPortException;
 import gnu.io.PortInUseException;
+import gnu.io.RXTXVersion;
 import gnu.io.SerialPort;
 import gnu.io.UnsupportedCommOperationException;
 import tuwien.auto.calimero.exception.KNXException;
@@ -118,7 +119,13 @@ public class RxtxAdapter extends LibraryAdapter
 
 	private void open(String portId, final int baudrate) throws KNXException
 	{
-		logger.info("open rxtx serial port connection for " + portId);
+		// Workaround wrt initializing some versions of rxtx (+forks), so I can properly use RXTXVersion::getVersion.
+		// If getVersion() is the first call into rxtx, initialization fails. This is caused by a wrong sequence in
+		// the RXTXVersion static initializer block, with Version being assigned after SerialManager::getInstance.
+		// Force initialization via other execution path:
+		CommPortIdentifier.getPortIdentifiers();
+
+		logger.info("open rxtx (" + RXTXVersion.getVersion() + ") serial port connection for " + portId);
 		try {
 			// rxtx does not recognize the Windows prefix for a resource name
 			if (portId.startsWith("\\\\.\\"))
