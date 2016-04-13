@@ -5,7 +5,7 @@
 		<groupId>com.github.calimero</groupId>
 		<artifactId>calimero-parent</artifactId>
 		<version>2.4-SNAPSHOT</version>
-	</parent>	
+	</parent>
 	<artifactId>calimero-rxtx</artifactId>
 	<name>Calimero rxtx Adapter</name>
 	<description>Adapter to use the rxtx library for serial communication</description>
@@ -13,7 +13,6 @@
 		<url>https://github.com/calimero-project/rxtx-adapter.git</url>
 	</scm>
 	<url>https://github.com/calimero-project/rxtx-adapter</url>
-
 	<licenses>
 		<license>
 			<name>GNU General Public License, version 2, with the Classpath Exception</name>
@@ -33,9 +32,9 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.rxtx</groupId>
-			<artifactId>rxtx</artifactId>
-			<version>2.1.7</version>
+			<groupId>com.neuronrobotics</groupId>
+			<artifactId>nrjavaserial</artifactId>
+			<version>3.11.0</version>
 		</dependency>
 	</dependencies>
 </project>
