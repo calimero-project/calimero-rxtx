@@ -39,6 +39,10 @@ package tuwien.auto.calimero.serial;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 
@@ -70,6 +74,13 @@ public class RxtxAdapter extends LibraryAdapter
 	private InputStream is;
 	private OutputStream os;
 
+	public static List<String> getPortIdentifiers()
+	{
+		@SuppressWarnings("unchecked")
+		final Enumeration<CommPortIdentifier> ports = CommPortIdentifier.getPortIdentifiers();
+		return Collections.list(ports).stream().map(CommPortIdentifier::getName).collect(Collectors.toList());
+	}
+
 	/**
 	 * Creates a new rxtx library adapter, and opens a serial port using a port identifier
 	 * and baud rate.
@@ -90,8 +101,7 @@ public class RxtxAdapter extends LibraryAdapter
 	public void setBaudRate(final int baudrate)
 	{
 		try {
-			port.setSerialPortParams(baudrate, SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
-					SerialPort.PARITY_EVEN);
+			port.setSerialPortParams(baudrate, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_EVEN);
 		}
 		catch (final UnsupportedCommOperationException e) {
 			logger.error("failed to configure port settings");
