@@ -34,7 +34,7 @@
 		<dependency>
 			<groupId>com.neuronrobotics</groupId>
 			<artifactId>nrjavaserial</artifactId>
-			<version>3.11.0</version>
+			<version>3.12.1</version>
 		</dependency>
 	</dependencies>
 </project>
