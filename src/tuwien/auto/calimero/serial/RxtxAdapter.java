@@ -129,7 +129,13 @@ public class RxtxAdapter extends LibraryAdapter
 	@Override
 	public void close()
 	{
-		port.close();
+		try {
+			port.close();
+		}
+		catch (final RuntimeException e) {
+			// RXTXPort might throw IllegalMonitorStateException
+			e.printStackTrace();
+		}
 	}
 
 	private void open(String portId, final int baudrate) throws KNXException
@@ -148,7 +154,7 @@ public class RxtxAdapter extends LibraryAdapter
 			final CommPortIdentifier id = CommPortIdentifier.getPortIdentifier(portId);
 			if (id.getPortType() != CommPortIdentifier.PORT_SERIAL)
 				throw new KNXException(portId + " is not a serial port ID");
-			port = (SerialPort) id.open("Calimero", OPEN_TIMEOUT);
+			port = id.open("Calimero", OPEN_TIMEOUT);
 			port.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
 			port.enableReceiveThreshold(1024);
 			// required to allow a close of the rxtx port, otherwise a read could lock
