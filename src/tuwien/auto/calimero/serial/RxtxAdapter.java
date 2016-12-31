@@ -154,7 +154,7 @@ public class RxtxAdapter extends LibraryAdapter
 			final CommPortIdentifier id = CommPortIdentifier.getPortIdentifier(portId);
 			if (id.getPortType() != CommPortIdentifier.PORT_SERIAL)
 				throw new KNXException(portId + " is not a serial port ID");
-			port = id.open("Calimero", OPEN_TIMEOUT);
+			port = (SerialPort) id.open("Calimero", OPEN_TIMEOUT);
 			port.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
 			port.enableReceiveThreshold(1024);
 			// required to allow a close of the rxtx port, otherwise a read could lock
@@ -170,46 +170,6 @@ public class RxtxAdapter extends LibraryAdapter
 					+ "flow control " + port.getFlowControlMode());
 			is = port.getInputStream();
 			os = port.getOutputStream();
-			/*
-			// Allows tracing of events, for informational purposes only
-			try {
-				port.notifyOnBreakInterrupt(true);
-				port.notifyOnCarrierDetect(true);
-				port.notifyOnCTS(true);
-				port.notifyOnDataAvailable(true);
-				port.notifyOnDSR(true);
-				port.notifyOnFramingError(true);
-				port.notifyOnOutputEmpty(true);
-				port.notifyOnOverrunError(true);
-				port.notifyOnParityError(true);
-				port.notifyOnRingIndicator(true);
-				port.addEventListener(new SerialPortEventListener() {
-					public void serialEvent(SerialPortEvent ev) {
-						int type = ev.getEventType();
-						if (type == SerialPortEvent.BI)
-							System.out.println("SerialPortEvent.BI");
-						if (type == SerialPortEvent.CD)
-							System.out.println("SerialPortEvent.CD");
-						if (type == SerialPortEvent.CTS)
-							System.out.println("SerialPortEvent.CTS");
-						if (type == SerialPortEvent.DATA_AVAILABLE)
-							System.out.println("SerialPortEvent.DATA_AVAILABLE");
-						if (type == SerialPortEvent.DSR)
-							System.out.println("SerialPortEvent.DSR");
-						if (type == SerialPortEvent.FE)
-							System.out.println("SerialPortEvent.FE");
-						if (type == SerialPortEvent.OE)
-							System.out.println("SerialPortEvent.OE");
-						if (type == SerialPortEvent.OUTPUT_BUFFER_EMPTY)
-							System.out.println("SerialPortEvent.OUTPUT_BUFFER_EMPTY");
-						if (type == SerialPortEvent.PE)
-							System.out.println("SerialPortEvent.PE");
-						if (type == SerialPortEvent.RI)
-							System.out.println("SerialPortEvent.RI");
-					}
-				});
-			} catch (TooManyListenersException e) {	}
-			*/
 		}
 		// we can't let those exceptions bubble up, so wrap and rethrow
 		catch (final NoSuchPortException | PortInUseException | IOException | UnsupportedCommOperationException e) {
