@@ -47,5 +47,5 @@ sourceSets {
 dependencies {
     compile "com.github.calimero:calimero-core:${version}"
     compile 'org.slf4j:slf4j-api:1.7.22'
-    compile 'com.neuronrobotics:nrjavaserial:3.12.1'
+    compile 'com.neuronrobotics:nrjavaserial:3.13.0'
 }
