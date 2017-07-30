@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.13.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
     }    
 }
 
@@ -14,9 +14,11 @@ repositories {
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 }
 
-apply plugin:'java'
+apply plugin:'java-library'
+apply plugin: 'maven'
 apply plugin: 'com.github.ben-manes.versions'
 
+group = 'com.github.calimero'
 version = '2.4-SNAPSHOT'
 
 sourceCompatibility = 1.8
@@ -24,6 +26,7 @@ targetCompatibility = 1.8
 
 compileJava.options*.compilerArgs = [
 	'-Xlint:all',
+	'-Xlint:-options',
 	'-Werror'
 ]
 
@@ -45,7 +48,7 @@ sourceSets {
 }
 
 dependencies {
-    compile "com.github.calimero:calimero-core:${version}"
-    compile 'org.slf4j:slf4j-api:1.7.22'
-    compile 'com.neuronrobotics:nrjavaserial:3.13.0'
+    api "com.github.calimero:calimero-core:${version}"
+    api 'org.slf4j:slf4j-api:1.8.0-alpha2'
+    implementation 'com.neuronrobotics:nrjavaserial:3.13.0'
 }
