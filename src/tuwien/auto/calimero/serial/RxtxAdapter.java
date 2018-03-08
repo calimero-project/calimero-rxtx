@@ -1,6 +1,6 @@
 /*
     Calimero 2 - A library for KNX network access
-    Copyright (c) 2006, 2016 B. Malinowsky
+    Copyright (c) 2006, 2018 B. Malinowsky
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -138,7 +138,7 @@ public class RxtxAdapter extends LibraryAdapter
 		}
 	}
 
-	private void open(String portId, final int baudrate) throws KNXException
+	private void open(final String portId, final int baudrate) throws KNXException
 	{
 		// Workaround wrt initializing some versions of rxtx (+forks), so I can properly use RXTXVersion::getVersion.
 		// If getVersion() is the first call into rxtx, initialization fails. This is caused by a wrong sequence in
@@ -146,14 +146,13 @@ public class RxtxAdapter extends LibraryAdapter
 		// Force initialization via other execution path:
 		CommPortIdentifier.getPortIdentifiers();
 
-		logger.info("open rxtx ({}) serial port connection for {}", RXTXVersion.getVersion(), portId);
+		// rxtx does not recognize the Windows prefix for a resource name
+		final String res = portId.startsWith("\\\\.\\") ? portId.substring(4) : portId;
+		logger.info("open rxtx ({}) serial port connection for {}", RXTXVersion.getVersion(), res);
 		try {
-			// rxtx does not recognize the Windows prefix for a resource name
-			if (portId.startsWith("\\\\.\\"))
-				portId = portId.substring(4);
-			final CommPortIdentifier id = CommPortIdentifier.getPortIdentifier(portId);
+			final CommPortIdentifier id = CommPortIdentifier.getPortIdentifier(res);
 			if (id.getPortType() != CommPortIdentifier.PORT_SERIAL)
-				throw new KNXException(portId + " is not a serial port ID");
+				throw new KNXException(res + " is not a serial port ID");
 			port = (SerialPort) id.open("Calimero", OPEN_TIMEOUT);
 			port.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
 			port.enableReceiveThreshold(1024);
@@ -165,14 +164,13 @@ public class RxtxAdapter extends LibraryAdapter
 				logger.warn("no timeout support: serial port might hang during close");
 			}
 			setBaudRate(baudrate);
-			logger.info("setup serial port: baudrate " + port.getBaudRate() + ", even parity, "
-					+ port.getDataBits() + " databits, " + port.getStopBits() + " stopbits, "
-					+ "flow control " + port.getFlowControlMode());
+			logger.debug("setup serial port: baudrate {}, even parity, {} databits, {} stopbits, flow control {}",
+					port.getBaudRate(), port.getDataBits(), port.getStopBits(), port.getFlowControlMode());
 			is = port.getInputStream();
 			os = port.getOutputStream();
 		}
 		// we can't let those exceptions bubble up, so wrap and rethrow
-		catch (final NoSuchPortException | PortInUseException | IOException | UnsupportedCommOperationException e) {
+		catch (NoSuchPortException | PortInUseException | IOException | UnsupportedCommOperationException e) {
 			if (port != null)
 				port.close();
 			try {
@@ -182,7 +180,7 @@ public class RxtxAdapter extends LibraryAdapter
 					os.close();
 			}
 			catch (final Exception ignore) {}
-			throw new KNXException("failed to open serial port " + portId, e);
+			throw new KNXException("failed to open serial port " + res, e);
 		}
 	}
 }
