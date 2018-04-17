@@ -49,6 +49,6 @@ sourceSets {
 
 dependencies {
     api "com.github.calimero:calimero-core:${version}"
-    api 'org.slf4j:slf4j-api:1.8.0-alpha2'
+    api 'org.slf4j:slf4j-api:1.8.0-beta2'
     implementation 'com.neuronrobotics:nrjavaserial:3.13.0'
 }
