@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.github.ben-manes:gradle-versions-plugin:0.21.0'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.28.0'
     }    
 }
 
@@ -54,6 +54,6 @@ sourceSets {
 
 dependencies {
     api "com.github.calimero:calimero-core:${version}"
-    api 'org.slf4j:slf4j-api:1.8.0-beta4'
+    api 'org.slf4j:slf4j-api:2.0.0-alpha1'
     implementation 'com.neuronrobotics:nrjavaserial:3.15.0'
 }
