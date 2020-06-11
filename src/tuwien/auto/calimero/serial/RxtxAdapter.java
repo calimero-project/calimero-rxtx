@@ -158,7 +158,7 @@ public class RxtxAdapter extends LibraryAdapter
 			port.enableReceiveThreshold(1024);
 			// required to allow a close of the rxtx port, otherwise a read could lock
 			try {
-				port.enableReceiveTimeout(250);
+				port.enableReceiveTimeout(5);
 			}
 			catch (final UnsupportedCommOperationException e) {
 				logger.warn("no timeout support: serial port might hang during close");
