@@ -9,7 +9,6 @@ repositories {
 }
 
 apply plugin:'java-library'
-apply plugin: 'maven'
 
 group = 'com.github.calimero'
 version = '2.5-M1'
