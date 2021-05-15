@@ -10,9 +10,9 @@
 	<name>Calimero rxtx Adapter</name>
 	<description>Adapter to use the rxtx library for serial communication</description>
 	<scm>
-		<url>https://github.com/calimero-project/rxtx-adapter.git</url>
+		<url>https://github.com/calimero-project/calimero-rxtx.git</url>
 	</scm>
-	<url>https://github.com/calimero-project/rxtx-adapter</url>
+	<url>https://github.com/calimero-project/calimero-rxtx</url>
 	<licenses>
 		<license>
 			<name>GNU General Public License, version 2, with the Classpath Exception</name>
