@@ -1,6 +1,6 @@
 /*
     Calimero 2 - A library for KNX network access
-    Copyright (c) 2006, 2019 B. Malinowsky
+    Copyright (c) 2006, 2021 B. Malinowsky
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -129,12 +129,18 @@ public class RxtxAdapter extends LibraryAdapter
 	@Override
 	public void close()
 	{
+		boolean interrupted = false;
 		try {
+			interrupted = Thread.interrupted();
 			port.close();
 		}
 		catch (final RuntimeException e) {
 			// RXTXPort might throw IllegalMonitorStateException
 			logger.debug("rxtx exception while closing serial port", e);
+		}
+		finally {
+			if (interrupted)
+				Thread.currentThread().interrupt();
 		}
 	}
 
