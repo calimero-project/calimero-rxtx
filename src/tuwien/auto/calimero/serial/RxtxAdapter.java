@@ -74,6 +74,9 @@ public class RxtxAdapter extends LibraryAdapter
 	private InputStream is;
 	private OutputStream os;
 
+	/**
+	 * @return port identifiers of all the ports currently known to the system
+	 */
 	public static List<String> getPortIdentifiers()
 	{
 		@SuppressWarnings("unchecked")
