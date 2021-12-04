@@ -42,9 +42,11 @@ import java.io.OutputStream;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.ServiceLoader;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import gnu.io.CommPortIdentifier;
 import gnu.io.NoSuchPortException;
@@ -53,6 +55,7 @@ import gnu.io.RXTXVersion;
 import gnu.io.SerialPort;
 import gnu.io.UnsupportedCommOperationException;
 import tuwien.auto.calimero.KNXException;
+import tuwien.auto.calimero.serial.spi.SerialCom;
 
 /**
  * Adapter to access a serial communication port using the rxtx (or compatible) library.
@@ -66,10 +69,11 @@ import tuwien.auto.calimero.KNXException;
  *
  * @author B. Malinowsky
  */
-public class RxtxAdapter extends LibraryAdapter
+public class RxtxAdapter implements SerialCom
 {
 	private static final int OPEN_TIMEOUT = 200;
 
+	private Logger logger;
 	private SerialPort port;
 	private InputStream is;
 	private OutputStream os;
@@ -85,6 +89,11 @@ public class RxtxAdapter extends LibraryAdapter
 	}
 
 	/**
+	 * SPI constructor used by {@link ServiceLoader}.
+	 */
+	public RxtxAdapter() {}
+
+	/**
 	 * Creates a new rxtx library adapter, and opens a serial port using a port identifier
 	 * and baud rate.
 	 *
@@ -93,14 +102,88 @@ public class RxtxAdapter extends LibraryAdapter
 	 * @param baudrate baud rate to use for communication, 0 &lt; baud rate
 	 * @throws KNXException on error opening/configuring the rxtx serial port
 	 */
-	public RxtxAdapter(final Logger logger, final String portId, final int baudrate)
-		throws KNXException
+	public RxtxAdapter(final Logger logger, final String portId, final int baudrate) throws KNXException
 	{
-		super(logger);
-		open(portId, baudrate);
+		open(portId);
+		this.logger = logger;
+		setBaudRate(baudrate);
 	}
 
 	@Override
+	public List<String> portIdentifiers() {
+		return getPortIdentifiers();
+	}
+
+	@Override
+	public void open(final String portId) throws KNXException {
+		logger = LoggerFactory.getLogger("calimero.serial:" + portId);
+
+		// Workaround wrt initializing some versions of rxtx (+forks), so I can properly use RXTXVersion::getVersion.
+		// If getVersion() is the first call into rxtx, initialization fails. This is caused by a wrong sequence in
+		// the RXTXVersion static initializer block, with Version being assigned after SerialManager::getInstance.
+		// Force initialization via other execution path:
+		CommPortIdentifier.getPortIdentifiers();
+
+		// rxtx does not recognize the Windows prefix for a resource name
+		final String res = portId.startsWith("\\\\.\\") ? portId.substring(4) : portId;
+		logger.info("open rxtx ({}) serial port connection for {}", RXTXVersion.getVersion(), res);
+		try {
+			final CommPortIdentifier id = CommPortIdentifier.getPortIdentifier(res);
+			if (id.getPortType() != CommPortIdentifier.PORT_SERIAL)
+				throw new KNXException(res + " is not a serial port ID");
+			port = id.open("Calimero", OPEN_TIMEOUT);
+			port.enableReceiveThreshold(1024);
+			// required to allow a close of the rxtx port, otherwise a read could lock
+			try {
+				port.enableReceiveTimeout(5);
+			}
+			catch (final UnsupportedCommOperationException e) {
+				logger.warn("no timeout support: serial port might hang during close");
+			}
+			is = port.getInputStream();
+			os = port.getOutputStream();
+		}
+		// we can't let those exceptions bubble up, so wrap and rethrow
+		catch (NoSuchPortException | PortInUseException | IOException | UnsupportedCommOperationException e) {
+			if (port != null)
+				port.close();
+			try {
+				if (is != null)
+					is.close();
+				if (os != null)
+					os.close();
+			}
+			catch (final Exception ignore) {}
+			throw new KNXException("failed to open serial port " + res, e);
+		}
+	}
+
+	@Override
+	public int baudRate() {
+		return getBaudRate();
+	}
+
+	@Override
+	public void setSerialPortParams(final int baudrate, final int databits, final StopBits stopbits,
+			final Parity parity) throws IOException {
+		try {
+			port.setSerialPortParams(baudrate, databits, stopbits.value(), parity.value());
+		}
+		catch (final UnsupportedCommOperationException e) {
+			throw new IOException("setting serial port parameters for " + port.getName(), e);
+		}
+	}
+
+	@Override
+	public void setFlowControlMode(final FlowControl mode) throws IOException {
+		try {
+			port.setFlowControlMode(mode.value());
+		}
+		catch (final UnsupportedCommOperationException e) {
+			throw new IOException("setting flow control mode " + mode, e);
+		}
+	}
+
 	public void setBaudRate(final int baudrate)
 	{
 		try {
@@ -111,19 +194,26 @@ public class RxtxAdapter extends LibraryAdapter
 		}
 	}
 
-	@Override
 	public int getBaudRate()
 	{
 		return port.getBaudRate();
 	}
 
 	@Override
+	public InputStream inputStream() {
+		return is;
+	}
+
 	public InputStream getInputStream()
 	{
 		return is;
 	}
 
 	@Override
+	public OutputStream outputStream() {
+		return os;
+	}
+
 	public OutputStream getOutputStream()
 	{
 		return os;
@@ -147,49 +237,10 @@ public class RxtxAdapter extends LibraryAdapter
 		}
 	}
 
-	private void open(final String portId, final int baudrate) throws KNXException
-	{
-		// Workaround wrt initializing some versions of rxtx (+forks), so I can properly use RXTXVersion::getVersion.
-		// If getVersion() is the first call into rxtx, initialization fails. This is caused by a wrong sequence in
-		// the RXTXVersion static initializer block, with Version being assigned after SerialManager::getInstance.
-		// Force initialization via other execution path:
-		CommPortIdentifier.getPortIdentifiers();
-
-		// rxtx does not recognize the Windows prefix for a resource name
-		final String res = portId.startsWith("\\\\.\\") ? portId.substring(4) : portId;
-		logger.info("open rxtx ({}) serial port connection for {}", RXTXVersion.getVersion(), res);
-		try {
-			final CommPortIdentifier id = CommPortIdentifier.getPortIdentifier(res);
-			if (id.getPortType() != CommPortIdentifier.PORT_SERIAL)
-				throw new KNXException(res + " is not a serial port ID");
-			port = (SerialPort) id.open("Calimero", OPEN_TIMEOUT);
-			port.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
-			port.enableReceiveThreshold(1024);
-			// required to allow a close of the rxtx port, otherwise a read could lock
-			try {
-				port.enableReceiveTimeout(5);
-			}
-			catch (final UnsupportedCommOperationException e) {
-				logger.warn("no timeout support: serial port might hang during close");
-			}
-			setBaudRate(baudrate);
-			logger.debug("setup serial port: baudrate {}, even parity, {} databits, {} stopbits, flow control {}",
-					port.getBaudRate(), port.getDataBits(), port.getStopBits(), port.getFlowControlMode());
-			is = port.getInputStream();
-			os = port.getOutputStream();
-		}
-		// we can't let those exceptions bubble up, so wrap and rethrow
-		catch (NoSuchPortException | PortInUseException | IOException | UnsupportedCommOperationException e) {
-			if (port != null)
-				port.close();
-			try {
-				if (is != null)
-					is.close();
-				if (os != null)
-					os.close();
-			}
-			catch (final Exception ignore) {}
-			throw new KNXException("failed to open serial port " + res, e);
-		}
+	@Override
+	public String toString() {
+		return String.format("%s baudrate %d, parity %d, %d databits, %d stopbits, flow control %d", port.getName(),
+				port.getBaudRate(), port.getParity(), port.getDataBits(), port.getStopBits(),
+				port.getFlowControlMode());
 	}
 }
