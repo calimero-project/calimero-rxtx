@@ -106,7 +106,13 @@ public class RxtxAdapter implements SerialCom
 	{
 		open(portId);
 		this.logger = logger;
-		setBaudRate(baudrate);
+		try {
+			port.setSerialPortParams(baudrate, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_EVEN);
+		}
+		catch (final UnsupportedCommOperationException e) {
+			close();
+			throw new KNXException("failed to configure port settings", e);
+		}
 	}
 
 	@Override
@@ -160,7 +166,7 @@ public class RxtxAdapter implements SerialCom
 
 	@Override
 	public int baudRate() {
-		return getBaudRate();
+		return port.getBaudRate();
 	}
 
 	@Override
@@ -184,38 +190,13 @@ public class RxtxAdapter implements SerialCom
 		}
 	}
 
-	public void setBaudRate(final int baudrate)
-	{
-		try {
-			port.setSerialPortParams(baudrate, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_EVEN);
-		}
-		catch (final UnsupportedCommOperationException e) {
-			logger.error("failed to configure port settings");
-		}
-	}
-
-	public int getBaudRate()
-	{
-		return port.getBaudRate();
-	}
-
 	@Override
 	public InputStream inputStream() {
 		return is;
 	}
 
-	public InputStream getInputStream()
-	{
-		return is;
-	}
-
 	@Override
 	public OutputStream outputStream() {
-		return os;
-	}
-
-	public OutputStream getOutputStream()
-	{
 		return os;
 	}
 
