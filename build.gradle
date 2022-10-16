@@ -15,8 +15,8 @@ apply plugin:'java-library'
 group = 'com.github.calimero'
 version = '2.6-SNAPSHOT'
 
-sourceCompatibility = 11
-targetCompatibility = 11
+sourceCompatibility = 19
+targetCompatibility = 19
 
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
@@ -25,7 +25,6 @@ javadoc.options.encoding = 'UTF-8'
 
 compileJava.options*.compilerArgs = [
 	'-Xlint:all',
-	'-Xlint:-options',
 	'-Werror'
 ]
 
