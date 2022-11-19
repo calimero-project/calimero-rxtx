@@ -65,7 +65,6 @@ tasks.withType(Jar) {
 
 dependencies {
     api "com.github.calimero:calimero-core:${version}"
-    api 'org.slf4j:slf4j-api:1.7.36'
     implementation 'com.neuronrobotics:nrjavaserial:5.2.1'
 }
 

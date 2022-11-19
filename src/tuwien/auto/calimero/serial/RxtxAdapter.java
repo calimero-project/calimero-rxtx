@@ -1,6 +1,6 @@
 /*
     Calimero 2 - A library for KNX network access
-    Copyright (c) 2006, 2021 B. Malinowsky
+    Copyright (c) 2006, 2022 B. Malinowsky
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -36,17 +36,19 @@
 
 package tuwien.auto.calimero.serial;
 
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.WARNING;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.System.Logger;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import gnu.io.CommPortIdentifier;
 import gnu.io.NoSuchPortException;
@@ -55,6 +57,7 @@ import gnu.io.RXTXVersion;
 import gnu.io.SerialPort;
 import gnu.io.UnsupportedCommOperationException;
 import tuwien.auto.calimero.KNXException;
+import tuwien.auto.calimero.log.LogService;
 import tuwien.auto.calimero.serial.spi.SerialCom;
 
 /**
@@ -122,7 +125,7 @@ public class RxtxAdapter implements SerialCom
 
 	@Override
 	public void open(final String portId) throws KNXException {
-		logger = LoggerFactory.getLogger("calimero.serial:" + portId);
+		logger = LogService.getLogger("calimero.serial:" + portId);
 
 		// Workaround wrt initializing some versions of rxtx (+forks), so I can properly use RXTXVersion::getVersion.
 		// If getVersion() is the first call into rxtx, initialization fails. This is caused by a wrong sequence in
@@ -132,7 +135,7 @@ public class RxtxAdapter implements SerialCom
 
 		// rxtx does not recognize the Windows prefix for a resource name
 		final String res = portId.startsWith("\\\\.\\") ? portId.substring(4) : portId;
-		logger.info("open rxtx ({}) serial port connection for {}", RXTXVersion.getVersion(), res);
+		logger.log(INFO, "open rxtx ({0}) serial port connection for {1}", RXTXVersion.getVersion(), res);
 		try {
 			final CommPortIdentifier id = CommPortIdentifier.getPortIdentifier(res);
 			if (id.getPortType() != CommPortIdentifier.PORT_SERIAL)
@@ -144,7 +147,7 @@ public class RxtxAdapter implements SerialCom
 				port.enableReceiveTimeout(5);
 			}
 			catch (final UnsupportedCommOperationException e) {
-				logger.warn("no timeout support: serial port might hang during close");
+				logger.log(WARNING, "no timeout support: serial port might hang during close");
 			}
 			is = port.getInputStream();
 			os = port.getOutputStream();
@@ -210,7 +213,7 @@ public class RxtxAdapter implements SerialCom
 		}
 		catch (final RuntimeException e) {
 			// RXTXPort might throw IllegalMonitorStateException
-			logger.debug("rxtx exception while closing serial port", e);
+			logger.log(DEBUG, "rxtx exception while closing serial port", e);
 		}
 		finally {
 			if (interrupted)
