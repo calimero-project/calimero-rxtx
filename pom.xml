@@ -7,7 +7,7 @@
 		<version>2.6-SNAPSHOT</version>
 	</parent>
 	<artifactId>calimero-rxtx</artifactId>
-	<name>Calimero rxtx Adapter</name>
+	<name>Calimero rxtx provider</name>
 	<description>Adapter to use the rxtx library for serial communication</description>
 	<scm>
 		<url>https://github.com/calimero-project/calimero-rxtx.git</url>

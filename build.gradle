@@ -26,7 +26,6 @@ javadoc.options.encoding = 'UTF-8'
 compileJava.options*.compilerArgs = [
 	'-Xlint:all',
 	'-Xlint:-options',
-	'-Werror'
 ]
 
 compileTestJava.options*.compilerArgs = [
@@ -75,7 +74,7 @@ publishing {
             artifactId = rootProject.name
             from components.java
             pom {
-                name = 'Calimero RXTX Adapter'
+                name = 'Calimero RXTX Provider'
                 description = 'Adapter to use the RXTX library for serial communication'
                 url = 'https://github.com/calimero-project/calimero-rxtx'
                 licenses {
