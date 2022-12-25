@@ -74,7 +74,7 @@ publishing {
             from components.java
             pom {
                 name = 'Calimero RXTX Provider'
-                description = 'Adapter to use the RXTX library for serial communication'
+                description = 'Serial communication provider using RXTX'
                 url = 'https://github.com/calimero-project/calimero-rxtx'
                 licenses {
                     license {
