@@ -1,8 +1,8 @@
-# RXTX Adapter
+# Calimero RXTX provider [![CI with Gradle](https://github.com/calimero-project/calimero-rxtx/actions/workflows/gradle.yml/badge.svg)](https://github.com/calimero-project/calimero-rxtx/actions/workflows/gradle.yml)
 
 Adapter to provide serial access to KNX networks using the RXTX (or any compatible) library.
 
-Simply put the adapter on the classpath used by Calimero.
+Simply put the provider on the classpath used by Calimero.
 
 ## Download
 All Calimero build artifacts are directly downloadable from Maven repositories.
