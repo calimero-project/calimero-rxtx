@@ -1,5 +1,6 @@
 plugins {
   id "com.github.ben-manes.versions" version "0.44.0"
+  id 'java-library'
   id 'maven-publish'
   id 'signing'
 }
@@ -9,8 +10,6 @@ repositories {
     mavenCentral()
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 }
-
-apply plugin:'java-library'
 
 group = 'com.github.calimero'
 version = '2.6-SNAPSHOT'
@@ -90,7 +89,7 @@ publishing {
                     }
                 }
                 scm {
-                    connection = 'scm:git:git://github.com:calimero-project/calimero-rxtx.git'
+                    connection = 'scm:git:git://github.com/calimero-project/calimero-rxtx.git'
                     url = 'https://github.com/calimero-project/calimero-rxtx.git'
                 }
             }
