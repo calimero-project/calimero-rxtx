@@ -51,7 +51,7 @@ java {
 
 tasks.withType(Jar) {
 	from("${projectDir}") {
-        include 'LICENSE'
+        include 'LICENSE.txt'
         into "META-INF"
     }
     if (name.equals('sourcesJar')) {
