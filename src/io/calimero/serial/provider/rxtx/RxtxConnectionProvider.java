@@ -51,6 +51,11 @@ import tuwien.auto.calimero.serial.spi.SerialConnectionProvider;
  * Serial connection provider for RXTX serial communication.
  */
 public final class RxtxConnectionProvider implements SerialConnectionProvider {
+	/**
+	 * Creates a new RXTX connection provider instance.
+	 */
+	public RxtxConnectionProvider() {}
+
 	@Override
 	public SerialCom open(final Settings settings) throws KNXException, IOException {
 		return new RxtxAdapter(settings.portId(), settings.baudrate(), settings.databits(), settings.stopbits(),
