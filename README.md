@@ -36,5 +36,4 @@ mvn clean build
 ## Dependencies
 
 - `calimero-core`
--  `slf4j`
 - `com.neuronrobotics:nrjavaserial`

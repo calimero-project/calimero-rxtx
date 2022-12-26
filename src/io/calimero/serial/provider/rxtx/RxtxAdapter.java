@@ -36,13 +36,15 @@
 
 package io.calimero.serial.provider.rxtx;
 
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.WARNING;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.System.Logger;
 import java.time.Duration;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import gnu.io.CommPortIdentifier;
 import gnu.io.NoSuchPortException;
@@ -83,7 +85,6 @@ final class RxtxAdapter implements SerialCom {
 	 * Creates a new rxtx library adapter, and opens a serial port using the specified port identifier configuration
 	 * settings.
 	 *
-	 * @param logger the logger to use for this adapter
 	 * @param portId port identifier of the serial communication port to use
 	 * @param baudrate baud rate to use for communication, 0 &lt; baud rate
 	 * @param databits databits
@@ -97,11 +98,11 @@ final class RxtxAdapter implements SerialCom {
 	RxtxAdapter(final String portId, final int baudrate, final int databits, final StopBits stopbits,
 			final Parity parity, final FlowControl flowControl, final Duration readIntervalTimeout,
 			final Duration receiveTimeout) throws KNXException {
-		logger = LoggerFactory.getLogger("io.calimero.serial.provider.rxtx:" + portId);
+		logger = System.getLogger("io.calimero.serial.provider.rxtx:" + portId);
 
 		// rxtx does not recognize the Windows prefix for a resource name
 		final String res = portId.startsWith("\\\\.\\") ? portId.substring(4) : portId;
-		logger.info("open {} serial port connection for {}", RXTXVersion.getVersion(), res);
+		logger.log(INFO, "open {0} serial port connection for {1}", RXTXVersion.getVersion(), res);
 		try {
 			final CommPortIdentifier id = CommPortIdentifier.getPortIdentifier(res);
 			if (id.getPortType() != CommPortIdentifier.PORT_SERIAL)
@@ -114,7 +115,7 @@ final class RxtxAdapter implements SerialCom {
 				port.enableReceiveTimeout((int) receiveTimeout.toMillis());
 			}
 			catch (final UnsupportedCommOperationException e) {
-				logger.warn("no timeout support: serial port might hang during close");
+				logger.log(WARNING, "receive timeout unsupported: serial port might hang during close");
 			}
 
 			port.setSerialPortParams(baudrate, databits, stopbits.value(), parity.value());
@@ -154,7 +155,7 @@ final class RxtxAdapter implements SerialCom {
 		}
 		catch (final RuntimeException e) {
 			// RXTXPort might throw IllegalMonitorStateException
-			logger.debug("rxtx exception while closing serial port", e);
+			logger.log(DEBUG, "RXTX error while closing serial port", e);
 		}
 		finally {
 			if (interrupted)
