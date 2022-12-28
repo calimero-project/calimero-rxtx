@@ -11,7 +11,7 @@ repositories {
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 }
 
-group = 'com.github.calimero'
+group = 'io.calimero'
 version = '2.6-SNAPSHOT'
 
 sourceCompatibility = 11
@@ -62,7 +62,7 @@ tasks.withType(Jar) {
 }
 
 dependencies {
-    api "com.github.calimero:calimero-core:${version}"
+    api "io.calimero:calimero-core:${version}"
     implementation 'com.neuronrobotics:nrjavaserial:5.2.1'
 }
 

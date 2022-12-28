@@ -52,8 +52,8 @@ import gnu.io.PortInUseException;
 import gnu.io.RXTXVersion;
 import gnu.io.SerialPort;
 import gnu.io.UnsupportedCommOperationException;
-import tuwien.auto.calimero.KNXException;
-import tuwien.auto.calimero.serial.spi.SerialCom;
+import io.calimero.KNXException;
+import io.calimero.serial.spi.SerialCom;
 
 /**
  * Adapter to access a serial communication port using the rxtx (or compatible) library.

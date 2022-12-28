@@ -43,9 +43,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import gnu.io.CommPortIdentifier;
-import tuwien.auto.calimero.KNXException;
-import tuwien.auto.calimero.serial.spi.SerialCom;
-import tuwien.auto.calimero.serial.spi.SerialConnectionProvider;
+import io.calimero.KNXException;
+import io.calimero.serial.spi.SerialCom;
+import io.calimero.serial.spi.SerialConnectionProvider;
 
 /**
  * Serial connection provider for RXTX serial communication.
