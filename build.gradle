@@ -25,6 +25,8 @@ javadoc.options.encoding = 'UTF-8'
 compileJava.options*.compilerArgs = [
 	'-Xlint:all',
 	'-Xlint:-options',
+	"--limit-modules", "java.base,io.calimero.core",
+	"--add-reads", "io.calimero.serial.provider.rxtx=ALL-UNNAMED"
 ]
 
 compileTestJava.options*.compilerArgs = [
@@ -47,6 +49,10 @@ sourceSets {
 java {
     withSourcesJar()
     withJavadocJar()
+}
+
+javadoc {
+    options.addStringOption("-add-reads", "io.calimero.serial.provider.rxtx=ALL-UNNAMED")
 }
 
 tasks.withType(Jar) {
