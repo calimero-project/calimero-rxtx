@@ -1,6 +1,6 @@
 /*
     Calimero 2 - A library for KNX network access
-    Copyright (c) 2006, 2022 B. Malinowsky
+    Copyright (c) 2006, 2023 B. Malinowsky
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -60,7 +60,7 @@ import tuwien.auto.calimero.serial.spi.SerialCom;
  * <p>
  * The rxtx library itself is not part of the Calimero library.<br>
  * For downloads, license, installation and usage of the rxtx library, as well as further documentation, refer to the
- * rxtx library project, https://github.com/rxtx/rxtx.
+ * <a href="https://github.com/rxtx/rxtx">RXTX</a> library project.
  *
  * @author B. Malinowsky
  */

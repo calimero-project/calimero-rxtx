@@ -1,6 +1,6 @@
 /*
     Calimero 2 - A library for KNX network access
-    Copyright (c) 2022, 2022 B. Malinowsky
+    Copyright (c) 2022, 2023 B. Malinowsky
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -36,7 +36,6 @@
 
 package io.calimero.serial.provider.rxtx;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.Set;
@@ -57,7 +56,7 @@ public final class RxtxConnectionProvider implements SerialConnectionProvider {
 	public RxtxConnectionProvider() {}
 
 	@Override
-	public SerialCom open(final Settings settings) throws KNXException, IOException {
+	public SerialCom open(final Settings settings) throws KNXException {
 		return new RxtxAdapter(settings.portId(), settings.baudrate(), settings.databits(), settings.stopbits(),
 				settings.parity(), settings.flowControl(), settings.readIntervalTimeout(), settings.receiveTimeout());
 	}
