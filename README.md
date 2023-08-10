@@ -1,25 +1,19 @@
-# RXTX Adapter
+# Calimero RXTX provider [![CI with Gradle](https://github.com/calimero-project/calimero-rxtx/actions/workflows/gradle.yml/badge.svg)](https://github.com/calimero-project/calimero-rxtx/actions/workflows/gradle.yml)
 
-Adapter to provide serial access to KNX networks using the RXTX (or any compatible) library.
+Provider for serial access to KNX networks using the RXTX (or any compatible) library.
 
-Simply put the adapter on the classpath used by Calimero.
-
-## Download
 All Calimero build artifacts are directly downloadable from Maven repositories.
+Simply put the provider on the module or class path used by Calimero. 
 
-Using git
+When using this provider in a modularized setup, Java needs to be started with the option `--add-reads io.calimero.serial.provider.rxtx=ALL-UNNAMED`, because nrjavaserial is not modularized.
+
+This provider uses `System.Logger` for logging.
+
+## Building from Source
 
 ~~~ sh
 git clone https://github.com/calimero-project/calimero-rxtx.git
 ~~~
-
-Using hub
-
-~~~ sh
-hub clone calimero-project/calimero-rxtx
-~~~
-
-## Building from Source
 
 With Gradle:
 
@@ -36,5 +30,4 @@ mvn clean build
 ## Dependencies
 
 - `calimero-core`
--  `slf4j`
 - `com.neuronrobotics:nrjavaserial`
