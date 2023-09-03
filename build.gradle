@@ -14,9 +14,6 @@ repositories {
 group = 'io.calimero'
 version = '3.0-SNAPSHOT'
 
-sourceCompatibility = 19
-targetCompatibility = 19
-
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
 javadoc.options.encoding = 'UTF-8'
@@ -51,6 +48,9 @@ sourceSets {
 }
 
 java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(19))
+    }
     withSourcesJar()
     withJavadocJar()
 }
