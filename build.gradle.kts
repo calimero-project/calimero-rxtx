@@ -30,10 +30,6 @@ tasks.compileTestJava {
 	)
 }
 
-tasks.named<JavaCompile>("compileJava") {
-	options.javaModuleVersion = project.version.toString()
-}
-
 sourceSets {
 	main {
 		java.srcDir("src")
