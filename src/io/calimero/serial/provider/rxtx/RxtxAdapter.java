@@ -1,6 +1,6 @@
 /*
     Calimero 2 - A library for KNX network access
-    Copyright (c) 2006, 2023 B. Malinowsky
+    Copyright (c) 2006, 2025 B. Malinowsky
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -37,7 +37,6 @@
 package io.calimero.serial.provider.rxtx;
 
 import static java.lang.System.Logger.Level.DEBUG;
-import static java.lang.System.Logger.Level.INFO;
 import static java.lang.System.Logger.Level.WARNING;
 
 import java.io.IOException;
@@ -102,7 +101,7 @@ final class RxtxAdapter implements SerialCom {
 
 		// rxtx does not recognize the Windows prefix for a resource name
 		final String res = portId.startsWith("\\\\.\\") ? portId.substring(4) : portId;
-		logger.log(INFO, "open {0} serial port connection for {1}", RXTXVersion.getVersion(), res);
+		logger.log(DEBUG, "open {0} serial port connection for {1}", RXTXVersion.getVersion(), res);
 		try {
 			final CommPortIdentifier id = CommPortIdentifier.getPortIdentifier(res);
 			if (id.getPortType() != CommPortIdentifier.PORT_SERIAL)
