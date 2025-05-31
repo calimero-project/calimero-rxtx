@@ -12,7 +12,7 @@ repositories {
 }
 
 group = "com.github.calimero"
-version = "2.6-rc2"
+version = "2.6"
 
 tasks.compileJava {
 	options.encoding = "UTF-8"
