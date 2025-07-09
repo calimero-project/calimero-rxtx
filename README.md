@@ -1,4 +1,4 @@
-# Calimero RXTX provider [![CI with Gradle](https://github.com/calimero-project/calimero-rxtx/actions/workflows/gradle.yml/badge.svg)](https://github.com/calimero-project/calimero-rxtx/actions/workflows/gradle.yml)
+# Calimero RXTX provider [![CI with Gradle](https://github.com/calimero-project/calimero-rxtx/actions/workflows/gradle.yml/badge.svg)](https://github.com/calimero-project/calimero-rxtx/actions/workflows/gradle.yml) [![](https://jitpack.io/v/calimero-project/calimero-rxtx.svg)](https://jitpack.io/#calimero-project/calimero-rxtx) [![](https://img.shields.io/badge/jitpack-master-brightgreen?label=JitPack)](https://jitpack.io/#calimero-project/calimero-rxtx/master)
 
 Provider for serial access to KNX networks using the RXTX (or any compatible) library.
 
