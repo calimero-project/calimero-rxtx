@@ -15,16 +15,8 @@ This provider uses `System.Logger` for logging.
 git clone https://github.com/calimero-project/calimero-rxtx.git
 ~~~
 
-With Gradle:
-
 ```
 gradle build
-```
-
-With Maven:
-
-```
-mvn clean build
 ```
 
 ## Dependencies
