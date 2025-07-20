@@ -13,11 +13,10 @@ This provider uses `System.Logger` for logging.
 
 ~~~ sh
 git clone https://github.com/calimero-project/calimero-rxtx.git
+cd calimero-rxtx
+# use gradlew.bat on Windows
+./gradlew build
 ~~~
-
-```
-gradle build
-```
 
 ## Dependencies
 
