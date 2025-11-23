@@ -1,0 +1,12 @@
+{
+  "reflection": [
+    {
+      "type": "io.calimero.serial.provider.rxtx.RxtxConnectionProvider"
+    }
+  ],
+  "resources": [
+    {
+      "glob": "META-INF/services/io.calimero.serial.spi.SerialConnectionProvider"
+    }
+  ]
+}
