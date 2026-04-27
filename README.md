@@ -9,6 +9,9 @@ When using this provider in a modularized setup, Java needs to be started with t
 
 This provider uses `System.Logger` for logging.
 
+#### Windows & macOS on AArch64
+_nrjavaserial_ currently does not include native libraries for AArch64 on Windows or macOS.
+
 ## Building from Source
 
 ~~~ sh
