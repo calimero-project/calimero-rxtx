@@ -2,11 +2,32 @@
   "reflection": [
     {
       "type": "io.calimero.serial.provider.rxtx.RxtxConnectionProvider"
+    },
+    {
+      "type": "gnu.io.RXTXCommDriver",
+      "methods": [
+        {
+          "name": "<init>",
+          "parameterTypes": []
+        }
+      ]
     }
   ],
   "resources": [
     {
       "glob": "META-INF/services/io.calimero.serial.spi.SerialConnectionProvider"
+    },
+    {
+      "glob": "native/freebsd/x86_64/libNRJavaSerial.so"
+    },
+    {
+      "glob": "native/linux/ARM_64/libNRJavaSerialv8.so"
+    },
+    {
+      "glob": "native/linux/x86_64/libNRJavaSerial.so"
+    },
+    {
+      "glob": "native/windows/x86_64/libNRJavaSerial.dll"
     }
   ]
 }
