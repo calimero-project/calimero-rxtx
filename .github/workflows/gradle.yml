@@ -18,12 +18,12 @@ jobs:
 
     steps:
     - name: Checkout calimero-core
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         repository: calimero-project/calimero-core
         path: calimero-core
     - name: Checkout calimero-rxtx
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         repository: calimero-project/calimero-rxtx
         path: calimero-rxtx
